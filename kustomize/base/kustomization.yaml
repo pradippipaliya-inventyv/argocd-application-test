@@ -6,3 +6,4 @@ resources:
   - service.yaml
   - cluster-role.yaml
   - hpa.yaml
+  - secret.yaml
