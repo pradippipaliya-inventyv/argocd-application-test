@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: nginx-pod-default
+  name: nginx-pod
   namespace: default
 spec:
   containers:
   - image: nginx
-    imagePullPolicy: Always
+    imagePullPolicy: IfNotPresent
     name: nginx-pod
     resources: {}
