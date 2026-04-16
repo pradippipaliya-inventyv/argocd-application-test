@@ -5,11 +5,6 @@ metadata:
   annotations:
     argocd.argoproj.io/hook: PostSync  # Runs after sync succeeds
     argocd.argoproj.io/hook-delete-policy: HookSucceeded
-    # Test these dynamic templates:
-    argocd.argoproj.io/test-repo-url: "{{repoURL}}"  # Full repo URL
-    argocd.argoproj.io/test-path: "{{path}}"         # e.g., "test-env"
-    argocd.argoproj.io/test-branch: "{{targetRevision}}"  # e.g., "main"
-    argocd.argoproj.io/test-app-name: "{{metadata.name}}" # App name
 spec:
   restartPolicy: Never
   containers:
@@ -19,8 +14,15 @@ spec:
       - sh
       - -c
       - |
-        echo "=== ArgoCD Auto-Injected Env Vars ==="
-        env | grep ARGOCD || true
+        echo "=== Guaranteed ArgoCD Env Vars (Always Populated) ==="
+        echo "ARGOCD_APP_NAME: $ARGOCD_APP_NAME"
+        echo "ARGOCD_APP_NAMESPACE: $ARGOCD_APP_NAMESPACE"
+        echo "ARGOCD_APP_REVISION: $ARGOCD_APP_REVISION"  # Full Git URL for repo parsing
+        echo "ARGOCD_APP_URL: $ARGOCD_APP_URL"
+        echo "ARGOCD_APP_INSTANCE: $ARGOCD_APP_INSTANCE"
+        echo ""
+        echo "=== Full ARGOCD_ Vars ==="
+        env | grep '^ARGOCD_' | sort
         echo "=== Annotation-Populated Env Vars ==="
         echo "REPO_URL: $TEST_REPO_URL"
         echo "PATH: $TEST_PATH"
